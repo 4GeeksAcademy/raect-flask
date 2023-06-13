@@ -7,7 +7,7 @@ from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db , User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -62,6 +62,12 @@ def serve_any_other_file(path):
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0 # avoid cache memory
     return response
+
+@app.route('/user', methods=['GET'])
+def get_items():
+    items = User.query.all() # SELECT * FROM items
+    return jsonify([item.serialize() for item in items])
+
 
 
 # this only runs if `$ python src/main.py` is executed
